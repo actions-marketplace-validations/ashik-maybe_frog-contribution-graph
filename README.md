@@ -69,6 +69,10 @@ And during borsha:
       <a href="example/animated/monsoon.svg"><img src="example/preview/monsoon.svg" width="230" alt="Borsha — faint rain over the same pond"></a><br>
       <b>Monsoon</b><br><sub>Borsha — faint rain over the same pond</sub>
     </td>
+    <td align="center">
+      <a href="example/animated/monsoon-night.svg"><img src="example/preview/monsoon-night.svg" width="230" alt="Monsoon night — faint rain over deep blue water"></a><br>
+      <b>Monsoon night</b><br><sub>Monsoon night — faint rain over deep blue water</sub>
+    </td>
   </tr>
 </table>
 
@@ -82,7 +86,7 @@ June 15 to August 16, Bangladesh time) the pond gets about two dozen faint
 rain streaks with a small splash ring where each lands. It is scenery only:
 pad colours never change, so the graph never lies. Automatic like GitHub's
 Halloween grid; set `seasonal_effects: false` to opt out. The committed
-monsoon preview is forced-on so it looks the same all year.
+monsoon previews (day and night) are forced-on so they look the same all year.
 
 ## Use it
 

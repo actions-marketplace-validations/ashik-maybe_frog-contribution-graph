@@ -39,6 +39,10 @@ motion for browsers.
       <a href="animated/monsoon.svg"><img src="preview/monsoon.svg" width="230" alt="Borsha — the same normal year with faint rain, forced on so it never drifts with the date"></a><br>
       <b>Monsoon</b><br><sub>Borsha — the same normal year with faint rain, forced on so it never drifts with the date</sub>
     </td>
+    <td align="center">
+      <a href="animated/monsoon-night.svg"><img src="preview/monsoon-night.svg" width="230" alt="Monsoon night — the same normal year with faint rain over deep blue water, forced on so it never drifts with the date"></a><br>
+      <b>Monsoon night</b><br><sub>Monsoon night — the same normal year with faint rain over deep blue water, forced on so it never drifts with the date</sub>
+    </td>
   </tr>
 </table>
 
@@ -51,6 +55,7 @@ motion for browsers.
 - To regenerate: `npm run examples`. CI fails if the committed SVGs drift
   from the generator.
 - "tied" is a real common case (most days at 1 contribution), not an error.
-- The monsoon tile is rendered with monsoon forced on, under the heavier borsha
-  rain — about two dozen streaks, each with a small splash ring where it lands;
-  the live action decides by date. That keeps CI's drift check stable all year.
+- The monsoon and monsoon-night tiles are rendered with monsoon forced on,
+  under the heavier borsha rain — about two dozen streaks, each with a small
+  splash ring where it lands; the live action decides by date. That keeps CI's
+  drift check stable all year.
