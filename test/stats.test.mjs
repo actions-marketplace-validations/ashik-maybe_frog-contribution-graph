@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { detectShape, intensity, activeStats, activeRatio } from '../src/stats.mjs';
 import { buildGrid } from '../src/grid.mjs';
 import { weeks } from './helpers.mjs';
+import { FIXTURES } from '../example/fixtures.mjs';
 
 function fromCounts(counts) {
   const days = counts.map((count, index) => ({
@@ -64,13 +65,7 @@ test('activeRatio ignores empty trailing columns', () => {
 });
 
 test('your tied distribution stays degenerate', () => {
-  const counts = [
-    ...new Array(159).fill(0),
-    ...new Array(189).fill(1),
-    ...new Array(10).fill(2),
-    ...new Array(4).fill(3),
-    ...new Array(5).fill(4),
-  ];
+  const counts = FIXTURES.tied;
   const grid = fromCounts(counts);
   assert.equal(detectShape(grid), 'normal');
   const stats = activeStats(grid);

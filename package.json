@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "generate": "node src/generate.mjs"
+    "generate": "node src/generate.mjs",
+    "examples": "node example/generate.mjs"
   },
   "files": [
     "src",
