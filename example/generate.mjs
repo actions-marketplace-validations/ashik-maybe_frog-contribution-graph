@@ -18,6 +18,7 @@ const jobs = [
   ...Object.keys(FIXTURES).map((shape) => ({ shape, theme: 'day' })),
   { shape: 'normal', theme: 'night', suffix: 'night' },
   { shape: 'normal', theme: 'day', suffix: 'monsoon', monsoon: true },
+  { shape: 'normal', theme: 'night', suffix: 'monsoon-night', monsoon: true },
 ];
 
 await mkdir(previewDir, { recursive: true });
