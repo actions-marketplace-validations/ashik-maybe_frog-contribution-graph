@@ -1,6 +1,6 @@
 # frog-contribution-graph
 
-Your GitHub contribution graph as a Bengali pond. A frog hops your year; your
+Your GitHub contribution graph as a Bangladeshi pond. A frog hops your year; your
 busiest days ripple the water.
 
 One self-contained animated SVG, generated daily by GitHub Actions. No

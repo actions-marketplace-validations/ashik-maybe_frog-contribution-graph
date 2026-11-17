@@ -1,10 +1,10 @@
 {
   "name": "frog-contribution-graph",
-  "version": "0.1.0",
-  "description": "Your GitHub contribution graph as a Bengali pond - a frog hops your commits.",
+  "version": "1.0.0",
+  "description": "Your GitHub contribution graph as an animated Bangladeshi pond - a frog hops your commits.",
   "type": "module",
   "license": "MIT",
-  "author": "Ashik",
+  "author": "ashik-maybe",
   "engines": {
     "node": ">=20"
   },
