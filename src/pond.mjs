@@ -124,7 +124,7 @@ export function currentMarkup(theme, L, { bands = 5, still = false } = {}) {
     const wobble = ((i % 2) - 0.5) * 6;
     const flip = i % 2 ? -100 : 100;
     parts.push(
-      `<path class="currents" d="M ${L.pad} ${y.toFixed(1)} q ${(L.width / 4).toFixed(0)} ${wobble} ${(L.width / 2).toFixed(0)} 0 t ${(L.width / 2).toFixed(0)} 0" fill="none" stroke="${theme.waterEdge}" stroke-width="1.2" stroke-dasharray="28 72" opacity="0.5"><animate attributeName="stroke-dashoffset" values="0;${flip}" dur="24s" repeatCount="indefinite"/></path>`,
+      `<path class="currents" d="M ${L.pad} ${y.toFixed(1)} q ${(L.width / 4).toFixed(0)} ${wobble} ${(L.width / 2).toFixed(0)} 0 t ${(L.width / 2).toFixed(0)} 0" fill="none" stroke="${theme.waterEdge}" stroke-width="1.2" stroke-dasharray="28 72" opacity="0.5"><animate attributeName="stroke-dashoffset" values="0;${flip}" dur="${[72, 84, 96, 108, 120][i]}s" repeatCount="indefinite"/></path>`,
     );
   }
   return parts.join('');

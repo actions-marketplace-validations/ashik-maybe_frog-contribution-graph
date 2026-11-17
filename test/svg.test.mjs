@@ -82,6 +82,16 @@ test('svg stays under 250 KB', () => {
   assert.ok(Buffer.byteLength(svg) < 250_000);
 });
 
+test('current bands drift at 60s or slower', () => {
+  const wet = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
+  const bands = [...wet.matchAll(/<path class="currents"[\s\S]*?<\/path>/g)];
+  assert.equal(bands.length, 5);
+  for (const band of bands) {
+    const dur = Number(band[0].match(/dur="(\d+)s"/)[1]);
+    assert.ok(dur >= 60, `current band dur ${dur}s must be 60s or slower`);
+  }
+});
+
 test('monsoon render adds rain and changes nothing else', () => {
   const dry = renderSvg({ grid, route, theme: getTheme('day') });
   const wet = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
