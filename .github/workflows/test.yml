@@ -15,3 +15,6 @@ jobs:
         with:
           node-version: '24'
       - run: npm test
+      - run: npm run examples
+      - name: example previews must not drift
+        run: git diff --exit-code -- example/
