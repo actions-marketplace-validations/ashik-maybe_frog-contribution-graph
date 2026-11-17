@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { buildGrid } from '../src/grid.mjs';
 import { buildRoute } from '../src/route.mjs';
 import { renderSvg } from '../src/svg.mjs';
+import { layout } from '../src/pond.mjs';
 import { getTheme } from '../src/theme.mjs';
 import { hopSamples, motionTiming } from '../src/frog.mjs';
 import { weeks } from './helpers.mjs';
@@ -105,6 +106,20 @@ test('borsha rain renders 26 streaks with 26 splash rings', () => {
   const wet = renderSvg({ grid, route, theme: getTheme('night'), monsoon: true });
   assert.equal((wet.match(/<path class="rain"/g) || []).length, 26);
   assert.equal((wet.match(/<circle class="rain"/g) || []).length, 26);
+});
+
+test('square water fills the viewBox', () => {
+  const L = layout();
+  assert.equal(L.width, 755);
+  assert.equal(L.height, 141);
+  const svg = renderSvg({ grid, route, theme: getTheme('day') });
+  const rect = svg.match(/<rect[^>]*>/)[0];
+  assert.ok(!rect.includes('rx='), 'water rect must not have rx');
+  assert.ok(
+    svg.includes(`x="0.5" y="0.5" width="${(L.width - 1).toFixed(1)}" height="${(L.height - 1).toFixed(1)}"`),
+    'water rect is inset by 0.5px so the 1px stroke is not clipped',
+  );
+  assert.ok(svg.includes('viewBox="0 0 755 141"'));
 });
 
 test('splash rings start invisible (no pre-begin paint)', () => {

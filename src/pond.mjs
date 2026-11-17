@@ -30,7 +30,7 @@ export function layout() {
 
 /** Calm water: uniform body, no data. Data lives on the pads. */
 export function waterMarkup(theme, L) {
-  return `<rect width="${L.width}" height="${L.height}" rx="10" fill="${theme.water}" stroke="${theme.waterEdge}"/>`;
+  return `<rect x="0.5" y="0.5" width="${(L.width - 1).toFixed(1)}" height="${(L.height - 1).toFixed(1)}" fill="${theme.water}" stroke="${theme.waterEdge}"/>`;
 }
 
 /**
