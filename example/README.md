@@ -34,6 +34,12 @@ motion for browsers.
       <b>Night</b><br><sub>Monsoon night — the same pond, dark palette</sub>
     </td>
   </tr>
+  <tr>
+    <td align="center">
+      <a href="animated/monsoon.svg"><img src="preview/monsoon.svg" width="230" alt="Borsha — the same normal year with faint rain, forced on so it never drifts with the date"></a><br>
+      <b>Monsoon</b><br><sub>Borsha — the same normal year with faint rain, forced on so it never drifts with the date</sub>
+    </td>
+  </tr>
 </table>
 
 - Shape detection: empty (0 active) / sparse (<8% of days) / normal /
@@ -45,3 +51,4 @@ motion for browsers.
 - To regenerate: `npm run examples`. CI fails if the committed SVGs drift
   from the generator.
 - "tied" is a real common case (most days at 1 contribution), not an error.
+- The monsoon tile is rendered with monsoon forced on; the live action decides by date. That keeps CI's drift check stable all year.

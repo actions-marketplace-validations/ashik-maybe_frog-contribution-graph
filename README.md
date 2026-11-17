@@ -54,8 +54,28 @@ always reflects your own data.
   </tr>
 </table>
 
+And during borsha:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="example/animated/monsoon.svg"><img src="example/preview/monsoon.svg" width="230" alt="Borsha — faint rain over the same pond"></a><br>
+      <b>Monsoon</b><br><sub>Borsha — faint rain over the same pond</sub>
+    </td>
+  </tr>
+</table>
+
 Both directories under `example/` regenerate with `npm run examples`, and the
 SVGs are checked in so they never go stale silently.
+
+## Borsha, automatically
+
+During the classical Bengali rain months (Ashadh and Shravan, roughly
+June 15 to August 16, Bangladesh time) the pond gets about ten faint rain
+streaks. It is scenery only: pad colours never change, so the graph never
+lies. Automatic like GitHub's Halloween grid; set `seasonal_effects: false`
+to opt out. The committed monsoon preview is forced-on so it looks the same
+all year.
 
 ## Use it
 
@@ -102,6 +122,7 @@ Then embed it in your README:
 | `github_user_name` | yes | — | Username whose calendar becomes the pond |
 | `github_token` | no | `${{ github.token }}` | GraphQL token. A PAT is needed for private contributions |
 | `output_dir` | no | `dist` | Where the two SVGs are written |
+| `seasonal_effects` | no | `true` | Faint rain during borsha (Ashadh-Shravan, about Jun 15 - Aug 16, Bangladesh time); `false` opts out. |
 
 ## How it works
 
@@ -133,7 +154,7 @@ Then embed it in your README:
 
 - [x] **Shapla blooms** — a white-and-pink flower opens on your top 5% of days
 - [x] **River current** — faint drift lines so the water reads as moving
-- [ ] **Monsoon theme** — raindrops instead of pads
+- [x] **Borsha rain** — faint rain streaks during Ashadh-Shravan, opt-out via seasonal_effects
 
 ## Develop
 
