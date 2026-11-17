@@ -47,7 +47,7 @@ export function padMarkup(grid, theme, L, { shape = 'normal' } = {}) {
       const cell = grid[x][y];
       if (!cell || cell.count <= 0) continue;
       const t = intensity(stats, cell.count);
-      const rx = (L.cell * (0.52 + 0.42 * t) * scale).toFixed(2);
+      const rx = (L.cell * (0.42 + 0.3 * t) * scale).toFixed(2);
       const ry = (rx * 0.72).toFixed(2);
       const { unit, angle } = jitter(cell.date);
       const cx = (L.x(x) + L.cell / 2 + (unit - 0.5) * 1.2).toFixed(2);
