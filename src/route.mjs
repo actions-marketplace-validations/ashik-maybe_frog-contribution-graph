@@ -27,3 +27,17 @@ export function buildRoute(grid, { maxHops = 48 } = {}) {
   const step = picks.length / maxHops;
   return Array.from({ length: maxHops }, (_, i) => picks[Math.floor(i * step)]);
 }
+
+/**
+ * Classify each transition. Gaps wider than GAP_COLUMNS are too far to hop:
+ * the frog dives, swims under, and surfaces on the far pad. Sparse profiles
+ * get this on nearly every move; normal profiles only a few times per loop.
+ */
+export const GAP_COLUMNS = 2;
+
+export function markGaps(route) {
+  return route.map((point, index) => ({
+    ...point,
+    dive: index > 0 && point.x - route[index - 1].x > GAP_COLUMNS,
+  }));
+}
