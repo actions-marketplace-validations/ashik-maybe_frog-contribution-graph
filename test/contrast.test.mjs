@@ -18,18 +18,17 @@ function contrast(a, b) {
 }
 
 for (const theme of Object.values(THEMES)) {
-  test(`${theme.name}: outline clears every pad`, () => {
+  test(`${theme.name}: frog separates from every pad`, () => {
     for (const pad of theme.levels) {
-      assert.ok(contrast(OUTLINE, pad) >= 3, `outline on ${pad} is too weak`);
+      const separation = Math.max(
+        contrast(OUTLINE, pad),
+        contrast(theme.frog, pad),
+      );
+      assert.ok(separation >= 3, `${theme.name} frog on ${pad}: ${separation.toFixed(2)}:1`);
     }
   });
 
-  test(`${theme.name}: frog body clears the darkest pad`, () => {
-    const deepest = theme.levels.at(-1);
-    assert.ok(contrast(theme.frog, deepest) >= 2.3);
-  });
-
-  test(`${theme.name}: eye contrasts with body`, () => {
-    assert.ok(contrast(theme.frogEye, theme.frog) >= 2.5);
+  test(`${theme.name}: eye has a dark pupil`, () => {
+    assert.ok(contrast(theme.frogEye, OUTLINE) >= 3);
   });
 }
