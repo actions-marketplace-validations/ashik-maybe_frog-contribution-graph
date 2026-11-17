@@ -5,6 +5,22 @@
   "type": "module",
   "license": "MIT",
   "author": "ashik-maybe",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashik-maybe/frog-contribution-graph.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ashik-maybe/frog-contribution-graph/issues"
+  },
+  "homepage": "https://github.com/ashik-maybe/frog-contribution-graph#readme",
+  "keywords": [
+    "github-action",
+    "github-profile",
+    "contributions",
+    "svg",
+    "frog",
+    "pond"
+  ],
   "engines": {
     "node": ">=20"
   },
