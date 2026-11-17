@@ -1,0 +1,30 @@
+name: Generate pond
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # daily 09:00 Dhaka
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Generate pond SVGs
+        uses: ashik-maybe/frog-contribution-graph@main
+        with:
+          github_user_name: ${{ github.repository_owner }}
+
+      - name: Push SVGs to output branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+          keep_origin: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
