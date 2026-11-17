@@ -51,6 +51,20 @@ test('svg keeps motion, fallback and accessible title', () => {
   assert.match(svg, /role="img"/);
 });
 
+test('still render emits no SMIL and keeps the resting frog', () => {
+  const svg = renderSvg({ grid, route, theme: getTheme('day'), still: true });
+  assert.ok(!svg.includes('<animate'));
+  assert.match(svg, /still-frog/);
+});
+
+test('still render of an empty grid rests the frog on an empty pond', () => {
+  const empty = buildGrid([]);
+  const emptyRoute = buildRoute(empty);
+  const svg = renderSvg({ grid: empty, route: emptyRoute, theme: getTheme('day'), still: true });
+  assert.ok(!svg.includes('<animate'));
+  assert.match(svg, /empty pond/);
+});
+
 test('svg stays under 250 KB', () => {
   const svg = renderSvg({ grid, route, theme: getTheme('day') });
   assert.ok(Buffer.byteLength(svg) < 250_000);

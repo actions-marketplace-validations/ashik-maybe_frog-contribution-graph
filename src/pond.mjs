@@ -64,9 +64,10 @@ export function padMarkup(grid, theme, L, { shape = 'normal' } = {}) {
 
 /**
  * Up to eight blooms on the year's strongest days. One open/close cycle per
- * loop, phase-shifted so they do not pulse in unison.
+ * loop, phase-shifted so they do not pulse in unison. With `still`, petals
+ * render at full size and no SMIL is emitted.
  */
-export function flowerMarkup(grid, theme, L, { loopDuration, active }) {
+export function flowerMarkup(grid, theme, L, { loopDuration, active, still = false }) {
   const blooms = pickFlowers(grid, active);
   const parts = [];
   let index = 0;
@@ -76,15 +77,22 @@ export function flowerMarkup(grid, theme, L, { loopDuration, active }) {
       if (!cell || !blooms.has(cell)) continue;
       const cx = (L.x(x) + L.cell / 2).toFixed(2);
       const cy = (L.y(y) + L.cell / 2).toFixed(2);
-      const begin = ((index * loopDuration) / 8).toFixed(2);
       const petals = [];
       for (let p = 0; p < 5; p++) {
         const a = (p * 72 - 90) * (Math.PI / 180);
         const px = (cx * 1 + Math.cos(a) * 2.4).toFixed(2);
         const py = (cy * 1 + Math.sin(a) * 2.4).toFixed(2);
-        petals.push(
-          `<ellipse cx="${px}" cy="${py}" rx="1.7" ry="2.6" fill="${theme.shaplaPetal}" transform="rotate(${((a * 180) / Math.PI + 90).toFixed(1)} ${px} ${py})"><animate attributeName="rx" values="0.2;1.7;1.7" keyTimes="0;0.03;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="ry" values="0.2;2.6;2.6" keyTimes="0;0.03;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/></ellipse>`,
-        );
+        const rotate = `transform="rotate(${((a * 180) / Math.PI + 90).toFixed(1)} ${px} ${py})"`;
+        if (still) {
+          petals.push(
+            `<ellipse cx="${px}" cy="${py}" rx="1.7" ry="2.6" fill="${theme.shaplaPetal}" ${rotate}/>`,
+          );
+        } else {
+          const begin = ((index * loopDuration) / 8).toFixed(2);
+          petals.push(
+            `<ellipse cx="${px}" cy="${py}" rx="1.7" ry="2.6" fill="${theme.shaplaPetal}" ${rotate}><animate attributeName="rx" values="0.2;1.7;1.7" keyTimes="0;0.03;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="ry" values="0.2;2.6;2.6" keyTimes="0;0.03;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/></ellipse>`,
+          );
+        }
       }
       parts.push(
         `<g>${petals.join('')}<circle cx="${cx}" cy="${cy}" r="1.1" fill="${theme.shaplaHeart}"/></g>`,
@@ -105,8 +113,10 @@ export function monthMarkup(grid, theme, L, { locale = 'en' } = {}) {
     .join('');
 }
 
-/** River current: seamless because offset travel equals the dash period. */
-export function currentMarkup(theme, L, { bands = 5 } = {}) {
+/** River current: seamless because offset travel equals the dash period.
+ * `still` emits no current at all (nothing to animate). */
+export function currentMarkup(theme, L, { bands = 5, still = false } = {}) {
+  if (still) return '';
   const parts = [];
   for (let i = 0; i < bands; i++) {
     const y = L.top + ((i + 0.5) / bands) * (L.height - L.top - L.footer);
