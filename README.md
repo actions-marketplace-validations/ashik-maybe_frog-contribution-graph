@@ -7,6 +7,15 @@ One self-contained animated SVG, generated daily by GitHub Actions. No
 dependencies, no JavaScript on the viewer's side, and a static pond for anyone
 with `prefers-reduced-motion`.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)"
+          srcset="https://raw.githubusercontent.com/ashik-maybe/frog-contribution-graph/output/pond-night.svg">
+  <source media="(prefers-color-scheme: light)"
+          srcset="https://raw.githubusercontent.com/ashik-maybe/frog-contribution-graph/output/pond-day.svg">
+  <img alt="contribution pond"
+       src="https://raw.githubusercontent.com/ashik-maybe/frog-contribution-graph/output/pond-day.svg">
+</picture>
+
 ## Use it
 
 In your own profile repo, add `.github/workflows/pond.yml`:
