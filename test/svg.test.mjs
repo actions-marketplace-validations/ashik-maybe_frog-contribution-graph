@@ -25,6 +25,16 @@ test('values and keyTimes have equal counts', () => {
   assert.equal(values.split(';').length, keyTimes.split(';').length);
 });
 
+test('translate keyTimes span exactly 0 to 1', () => {
+  const svg = renderSvg({ grid, route, theme: getTheme('day') });
+  const keyTimes = svg
+    .match(/type="translate"[^>]*keyTimes="([^"]+)"/)[1]
+    .split(';')
+    .map(Number);
+  assert.equal(keyTimes[0], 0);
+  assert.equal(keyTimes.at(-1), 1);
+});
+
 test('both themes render and differ', () => {
   const day = renderSvg({ grid, route, theme: getTheme('day') });
   const night = renderSvg({ grid, route, theme: getTheme('night') });
