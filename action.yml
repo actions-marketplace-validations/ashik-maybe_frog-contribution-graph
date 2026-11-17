@@ -16,6 +16,10 @@ inputs:
     description: 'Directory pond-day.svg and pond-night.svg are written to'
     required: false
     default: 'dist'
+  seasonal_effects:
+    description: 'Faint rain on the pond during borsha (Ashadh-Shravan, about Jun 15 - Aug 16, Bangladesh time). Set false to opt out.'
+    required: false
+    default: 'true'
 runs:
   using: 'node24'
   main: 'src/generate.mjs'

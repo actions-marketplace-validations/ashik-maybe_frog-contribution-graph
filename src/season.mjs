@@ -37,3 +37,8 @@ export function isBorsha(now = new Date()) {
   if (month === BORSHA_END.month) return day <= BORSHA_END.day;
   return false;
 }
+
+/** True when the action input allows rain and today is inside borsha. */
+export function wantsRain(inputValue, now = new Date()) {
+  return inputValue !== 'false' && isBorsha(now);
+}

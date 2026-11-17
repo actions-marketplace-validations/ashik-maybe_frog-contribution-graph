@@ -5,6 +5,7 @@ import { buildGrid } from './grid.mjs';
 import { buildRoute } from './route.mjs';
 import { renderSvg } from './svg.mjs';
 import { getTheme } from './theme.mjs';
+import { wantsRain } from './season.mjs';
 
 function parseArgs(argv) {
   const args = {};
@@ -20,6 +21,7 @@ const args = parseArgs(process.argv.slice(2));
 const user = args.user ?? process.env.INPUT_GITHUB_USER_NAME ?? process.env.GITHUB_REPOSITORY_OWNER;
 const token = args.token ?? process.env.INPUT_GITHUB_TOKEN ?? process.env.GITHUB_TOKEN;
 const outDir = args.out ?? process.env.INPUT_OUTPUT_DIR ?? 'dist';
+const monsoon = wantsRain(process.env.INPUT_SEASONAL_EFFECTS);
 
 if (!user || !token) {
   console.error('frog-contribution-graph: need --user and --token (or INPUT_GITHUB_*)');
@@ -33,11 +35,12 @@ try {
   await mkdir(outDir, { recursive: true });
 
   for (const name of ['day', 'night']) {
-    const svg = renderSvg({ grid, route, theme: getTheme(name) });
+    const svg = renderSvg({ grid, route, theme: getTheme(name), monsoon });
     const path = join(outDir, `pond-${name}.svg`);
     await writeFile(path, svg);
     console.log(`wrote ${path} (${(Buffer.byteLength(svg) / 1024).toFixed(1)} KB)`);
   }
+  if (monsoon) console.log('borsha rain: on');
 } catch (error) {
   console.error(`frog-contribution-graph: ${error.message}`);
   process.exit(1);
