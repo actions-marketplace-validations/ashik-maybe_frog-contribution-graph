@@ -7,6 +7,9 @@ One self-contained animated SVG, generated daily by GitHub Actions. No
 dependencies, no JavaScript on the viewer's side, and a static pond for anyone
 with `prefers-reduced-motion`.
 
+Inspired by Bangladesh's shapla — the water lily — and the ponds it blooms in.
+The pond is a familiar image everywhere, so any profile can wear it.
+
 <picture>
   <source media="(prefers-color-scheme: dark)"
           srcset="https://raw.githubusercontent.com/ashik-maybe/frog-contribution-graph/output/pond-night.svg">
@@ -16,12 +19,52 @@ with `prefers-reduced-motion`.
        src="https://raw.githubusercontent.com/ashik-maybe/frog-contribution-graph/output/pond-day.svg">
 </picture>
 
-## Why a pond?
+## Use it
 
-Shapla — the water lily — inspired the pads and the shapla blooms that
-open on your strongest days. Bangladesh is where this comes from; the
-pond itself is a familiar image everywhere, so the pond is the star and
-any profile can wear it.
+In your own profile repo, add `.github/workflows/pond.yml`:
+
+```yaml
+name: Pond
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pond:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ashik-maybe/frog-contribution-graph@v1
+        with:
+          github_user_name: ${{ github.repository_owner }}
+      - uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+```
+
+Then embed it in your README:
+
+```html
+<picture>
+  <source media="(prefers-color-scheme: dark)"
+          srcset="https://raw.githubusercontent.com/YOU/YOU/output/pond-night.svg">
+  <source media="(prefers-color-scheme: light)"
+          srcset="https://raw.githubusercontent.com/YOU/YOU/output/pond-day.svg">
+  <img alt="contribution pond"
+       src="https://raw.githubusercontent.com/YOU/YOU/output/pond-day.svg">
+</picture>
+```
+
+## Inputs
+
+| Input | Required | Default | What it does |
+| --- | --- | --- | --- |
+| `github_user_name` | yes | — | Username whose calendar becomes the pond |
+| `github_token` | no | `${{ github.token }}` | GraphQL token. A PAT is needed for private contributions |
+| `output_dir` | no | `dist` | Where `pond-day.svg` and `pond-night.svg` are written |
+| `seasonal_effects` | no | `true` | Faint rain during borsha (Asharh-Srabon, about Jun 15 - Aug 16, Bangladesh time); `false` opts out. |
 
 ## What you might get
 
@@ -79,80 +122,7 @@ And during borsha:
 Both directories under `example/` regenerate with `npm run examples`, and the
 SVGs are checked in so they never go stale silently.
 
-## Borsha, automatically
-
-During the classical Bengali rain months (Ashadh and Shravan, roughly
-June 15 to August 16, Bangladesh time) the pond gets about two dozen faint
-rain streaks with a small splash ring where each lands. It is scenery only:
-pad colours never change, so the graph never lies. Automatic like GitHub's
-Halloween grid; set `seasonal_effects: false` to opt out. The committed
-monsoon previews (day and night) are forced-on so they look the same all year.
-
-## Use it
-
-In your own profile repo, add `.github/workflows/pond.yml`:
-
-```yaml
-name: Pond
-on:
-  schedule:
-    - cron: "0 3 * * *"
-  workflow_dispatch:
-permissions:
-  contents: write
-jobs:
-  pond:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ashik-maybe/frog-contribution-graph@v1
-        with:
-          github_user_name: ${{ github.repository_owner }}
-      - uses: crazy-max/ghaction-github-pages@v4
-        with:
-          target_branch: output
-          build_dir: dist
-```
-
-Then embed it in your README:
-
-```html
-<picture>
-  <source media="(prefers-color-scheme: dark)"
-          srcset="https://raw.githubusercontent.com/YOU/YOU/output/pond-night.svg">
-  <source media="(prefers-color-scheme: light)"
-          srcset="https://raw.githubusercontent.com/YOU/YOU/output/pond-day.svg">
-  <img alt="contribution pond"
-       src="https://raw.githubusercontent.com/YOU/YOU/output/pond-day.svg">
-</picture>
-```
-
-## Inputs
-
-| Input | Required | Default | What it does |
-| --- | --- | --- | --- |
-| `github_user_name` | yes | — | Username whose calendar becomes the pond |
-| `github_token` | no | `${{ github.token }}` | GraphQL token. A PAT is needed for private contributions |
-| `output_dir` | no | `dist` | Where the two SVGs are written |
-| `seasonal_effects` | no | `true` | Faint rain during borsha (Ashadh-Shravan, about Jun 15 - Aug 16, Bangladesh time); `false` opts out. |
-
-## How it works
-
-1. `contributionsCollection` comes from the GraphQL API (REST does not expose
-   the calendar), one year ending today.
-2. Weeks become a 53x7 grid; pads are ellipses sized by sqrt(count / p95)
-   relative to your own busiest stretch (p95, so one huge day can't flatten
-   the rest). Distributions with no real variance get flat, uniform pads
-   instead of invented contrast.
-3. The frog lands once per active week, on that week's busiest day.
-   Wide gaps (> 2 columns) make the frog dive and surface on the far pad.
-4. The hop is a quadratic arc implemented as SMIL animateTransform translate
-   keyframes (sit, arc, land-squash); each landing emits a fading ring.
-5. Up to eight shapla blooms open on your year's strongest days; months
-   use Intl; the Action emits English today.
-6. Output is deterministic: the same grid gives byte-identical SVG, so the
-   daily Action only needs to commit on real change.
-
-## What the picture means
+## Reading the pond
 
 | What you see | What it encodes |
 | --- | --- |
@@ -162,26 +132,48 @@ Then embed it in your README:
 | Shapla bloom | One of your eight highest days |
 | Rain, currents, water | Scenery — never data |
 
-## Design
+## Borsha, automatically
 
-- **Morning pond / monsoon night.** Two palettes, one pond. Water is blue in
-  both: pale sky-blue morning (#d9eaf5), deep river-blue night (#0a1a2e). Pads
-  stay green because they carry the data; the shapla blooms stay white-pink.
-- **Reduced motion.** The SMIL animation is wrapped in media queries; a static
-  pond renders for `prefers-reduced-motion: reduce`.
-- **Accessible output.** role="img" with a <title> and a <desc> that names
-  the active-day count and total contributions, so screen readers get the
-  numbers, not a picture.
+During the classical Bengali rain months (Asharh and Srabon, roughly
+June 15 to August 16, Bangladesh time) the pond gets about two dozen faint
+rain streaks with a small splash ring where each lands. It is scenery only:
+pad colours never change, so the graph never lies. Automatic like GitHub's
+Halloween grid; set `seasonal_effects: false` to opt out. The committed
+monsoon previews (day and night) are forced-on so they look the same all year.
+
+## Development
+
+### How it works
+
+1. `contributionsCollection` comes from the GraphQL API (REST does not expose
+   the calendar), one year ending today.
+2. Weeks become a 53x7 grid; pads are ellipses sized by `sqrt(count / p95)`
+   relative to your own busiest stretch. Distributions with no real variance
+   get flat, uniform pads instead of invented contrast. Shape detection
+   (empty / sparse / normal / dense) adjusts pad scale, never counts.
+3. The frog lands once per active week, on that week's busiest day. Wide gaps
+   (> 2 columns) make the frog dive and surface on the far pad.
+4. The hop is a quadratic arc implemented as SMIL `animateTransform`
+   keyframes (sit, arc, land-squash); each landing emits a fading ring.
+5. Up to eight shapla blooms open on your year's strongest days; month labels
+   use Intl (the Action emits English today).
+6. Water, currents and borsha rain are scenery; pads are data. Reduced motion
+   gets a static pond; the square water rect keeps GitHub's rectangle tight.
+7. Output is deterministic: the same grid gives byte-identical SVG, so the
+   daily Action only needs to commit on real change.
+
+### Design
+
+- **Morning pond / monsoon night.** Water is pale sky-blue (#d9eaf5) by day
+  and deep river-blue (#0a1a2e) at night. Pads stay green because they carry
+  the data; blooms stay white-pink.
+- **Accessible output.** `role="img"` with a `<title>` and a `<desc>` naming
+  the active-day count and total contributions.
 - **Zero dependencies.** Plain ESM plus `fetch`, so the action starts in
-  milliseconds and has no supply chain to audit.
+  milliseconds and has no supply chain to audit. The action itself runs on
+  `node24`.
 
-## Roadmap
-
-- [x] **Shapla blooms** — a white-and-pink flower opens on your eight highest days
-- [x] **River current** — faint drift lines so the water reads as moving
-- [x] **Borsha rain** — faint rain streaks during Ashadh-Shravan, opt-out via seasonal_effects
-
-## Develop
+### Local development
 
 ```sh
 npm test                              # node --test
@@ -189,8 +181,8 @@ npm run examples                      # regenerate example/preview and example/a
 npm run generate -- --user YOU --token $GITHUB_TOKEN
 ```
 
-Requires Node 20+. The action itself runs on `node24` inside GitHub's runners;
-locally, Bun works too because the code is standard ESM.
+Requires Node 20+. The committed example SVGs are checked against the
+generator in CI, so a render change must travel with regenerated previews.
 
 ## License
 
