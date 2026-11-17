@@ -49,7 +49,10 @@ export function monthMarkup(grid, theme, L) {
     .join('');
 }
 
-/** One fading ring per landing, phase-shifted to fire on the frog's arrival. */
+/** One fading ring per landing, phase-shifted to fire on the frog's arrival.
+ * The circle itself starts at opacity 0: SMIL applies no styles before an
+ * animation's begin time, so a visible static state would show every ring
+ * at once until the first loop completes. */
 export function rippleMarkup(route, theme, L, { hopDuration, loopDuration }) {
   const outer = (L.cell * 1.6).toFixed(1);
   return route
@@ -57,7 +60,7 @@ export function rippleMarkup(route, theme, L, { hopDuration, loopDuration }) {
       const cx = (L.x(p.x) + L.cell / 2).toFixed(1);
       const cy = (L.y(p.y) + L.cell / 2).toFixed(1);
       const begin = (i * hopDuration).toFixed(2);
-      return `<circle cx="${cx}" cy="${cy}" r="3" fill="none" stroke="${theme.ripple}" stroke-width="1.2"><animate attributeName="r" values="3;${outer};${outer}" keyTimes="0;0.04;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.55;0.25;0;0" keyTimes="0;0.015;0.05;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/></circle>`;
+      return `<circle cx="${cx}" cy="${cy}" r="3" opacity="0" fill="none" stroke="${theme.ripple}" stroke-width="1.2"><animate attributeName="r" values="3;${outer};${outer}" keyTimes="0;0.04;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.55;0.25;0;0" keyTimes="0;0.015;0.05;1" dur="${loopDuration.toFixed(2)}s" begin="${begin}s" repeatCount="indefinite"/></circle>`;
     })
     .join('');
 }
