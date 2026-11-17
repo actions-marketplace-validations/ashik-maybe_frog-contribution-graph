@@ -17,7 +17,7 @@ inputs:
     required: false
     default: 'dist'
   seasonal_effects:
-    description: 'Faint rain on the pond during borsha (Ashadh-Shravan, about Jun 15 - Aug 16, Bangladesh time). Set false to opt out.'
+    description: 'Faint rain on the pond during borsha (Asharh-Srabon, about Jun 15 - Aug 16, Bangladesh time). Set false to opt out.'
     required: false
     default: 'true'
 runs:
