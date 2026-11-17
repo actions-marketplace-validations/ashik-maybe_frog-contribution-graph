@@ -27,7 +27,7 @@ test('tracked files contain no Bangla script', () => {
   })
     .split('\0')
     .filter(Boolean);
-  const bangla = /[ঀ-ঁ]/;
+  const bangla = /[\u0980-\u09ff]/;
   const offenders = [];
   for (const file of files) {
     if (!/\.(md|mjs|json|yml|svg|txt)$/.test(file) && file !== 'LICENSE') continue;
