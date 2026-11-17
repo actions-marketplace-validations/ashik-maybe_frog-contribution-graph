@@ -31,4 +31,9 @@ for (const theme of Object.values(THEMES)) {
   test(`${theme.name}: eye has a dark pupil`, () => {
     assert.ok(contrast(theme.frogEye, OUTLINE) >= 3);
   });
+
+  test(`${theme.name}: rain streaks are perceivable against water`, () => {
+    const separation = contrast(theme.rainStreak, theme.water);
+    assert.ok(separation >= 1.5, `${theme.name} rain on water: ${separation.toFixed(2)}:1`);
+  });
 }

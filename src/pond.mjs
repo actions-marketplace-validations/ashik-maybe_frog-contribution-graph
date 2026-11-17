@@ -136,7 +136,7 @@ export function currentMarkup(theme, L, { bands = 5, still = false } = {}) {
  * stagger phases so the streaks do not move in lockstep. */
 export function rainMarkup(theme, L, { still = false } = {}) {
   const COUNT = 10;
-  const STREAK = 8;
+  const STREAK = 13;
   const PERIOD = 40;
   const left = L.pad;
   const right = L.width - L.pad;
@@ -151,7 +151,7 @@ export function rainMarkup(theme, L, { still = false } = {}) {
     const mid = (y + STREAK / 2).toFixed(2);
     const ys = y.toFixed(1);
     const ye = (y + STREAK).toFixed(1);
-    const opacity = still ? 0.2 : 0.35;
+    const opacity = still ? 0.45 : 0.6;
     const dash = still
       ? ''
       : `<animate attributeName="stroke-dashoffset" values="0;${-PERIOD}" dur="1.1s" calcMode="linear" begin="${(-i * 0.11).toFixed(2)}s" repeatCount="indefinite"/>`;
