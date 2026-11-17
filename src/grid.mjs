@@ -10,8 +10,8 @@ const LEVELS = {
 };
 
 const MONTHS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
 /** Convert GitHub weeks into a 53 x 7 grid indexed [column][weekday]. */
@@ -34,7 +34,7 @@ export function buildGrid(weeks) {
   return grid.slice(0, COLS);
 }
 
-/** Label a column the first time a new month appears in the data. */
+/** Label a column the first time a new month appears, as {x, monthIndex}. */
 export function monthLabels(grid) {
   const labels = [];
   let previous = -1;
@@ -43,7 +43,7 @@ export function monthLabels(grid) {
     if (!first) continue;
     const month = new Date(`${first.date}T00:00:00Z`).getUTCMonth();
     if (month !== previous) {
-      labels.push({ x, label: MONTHS[month] });
+      labels.push({ x, month });
       previous = month;
     }
   }
