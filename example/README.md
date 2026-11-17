@@ -51,4 +51,6 @@ motion for browsers.
 - To regenerate: `npm run examples`. CI fails if the committed SVGs drift
   from the generator.
 - "tied" is a real common case (most days at 1 contribution), not an error.
-- The monsoon tile is rendered with monsoon forced on; the live action decides by date. That keeps CI's drift check stable all year.
+- The monsoon tile is rendered with monsoon forced on, under the heavier borsha
+  rain — about two dozen streaks, each with a small splash ring where it lands;
+  the live action decides by date. That keeps CI's drift check stable all year.

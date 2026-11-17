@@ -36,4 +36,16 @@ for (const theme of Object.values(THEMES)) {
     const separation = contrast(theme.rainStreak, theme.water);
     assert.ok(separation >= 1.5, `${theme.name} rain on water: ${separation.toFixed(2)}:1`);
   });
+
+  test(`${theme.name}: every pad is perceivable against water`, () => {
+    for (const pad of theme.levels) {
+      const separation = contrast(pad, theme.water);
+      assert.ok(separation >= 1.15, `${theme.name} pad ${pad} on water: ${separation.toFixed(2)}:1`);
+    }
+  });
+
+  test(`${theme.name}: splash rings read against water`, () => {
+    const separation = contrast(theme.splashRing, theme.water);
+    assert.ok(separation >= 1.1, `${theme.name} splash on water: ${separation.toFixed(2)}:1`);
+  });
 }

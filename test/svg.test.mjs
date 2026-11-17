@@ -39,8 +39,19 @@ test('both themes render and differ', () => {
   const day = renderSvg({ grid, route, theme: getTheme('day') });
   const night = renderSvg({ grid, route, theme: getTheme('night') });
   assert.notEqual(day, night);
-  assert.match(day, /#dcefe4/);
-  assert.match(night, /#08191d/);
+  assert.match(day, /#d9eaf5/);
+  assert.match(night, /#0a1a2e/);
+});
+
+test('no render emits NaN coordinates', () => {
+  for (const name of ['day', 'night']) {
+    for (const monsoon of [true, false]) {
+      for (const still of [true, false]) {
+        const svg = renderSvg({ grid, route, theme: getTheme(name), monsoon, still });
+        assert.ok(!svg.includes('NaN'), `${name} monsoon=${monsoon} still=${still}`);
+      }
+    }
+  }
 });
 
 test('svg keeps motion, fallback and accessible title', () => {
@@ -88,4 +99,17 @@ test('rain streaks are paths not pads', () => {
   const wet = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
   assert.match(wet, /<path class="rain"/);
   assert.equal((wet.match(/<ellipse/g) || []).length, (dry.match(/<ellipse/g) || []).length);
+});
+
+test('borsha rain renders 26 streaks with 26 splash rings', () => {
+  const wet = renderSvg({ grid, route, theme: getTheme('night'), monsoon: true });
+  assert.equal((wet.match(/<path class="rain"/g) || []).length, 26);
+  assert.equal((wet.match(/<circle class="rain"/g) || []).length, 26);
+});
+
+test('splash rings start invisible (no pre-begin paint)', () => {
+  const wet = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
+  for (const m of wet.matchAll(/<circle class="rain"[^>]*>/g)) {
+    assert.match(m[0], /opacity="0"/);
+  }
 });

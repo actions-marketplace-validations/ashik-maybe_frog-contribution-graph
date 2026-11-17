@@ -20,6 +20,7 @@ export function layout() {
     gap,
     pad,
     top,
+    footer,
     width: innerWidth + pad * 2,
     height: top + innerHeight + pad + footer,
     x: (col) => pad + col * (cell + gap),
@@ -129,20 +130,24 @@ export function currentMarkup(theme, L, { bands = 5, still = false } = {}) {
   return parts.join('');
 }
 
-/** Faint borsha rain: scenery only, never data. Streaks are <path> elements
- * rotated ~14 degrees, so pad (ellipse) counts are untouched. `still` keeps
- * the same geometry with no SMIL and a lower opacity. The offset travel
- * equals the dash period, so the loop is seamless; negative `begin` offsets
- * stagger phases so the streaks do not move in lockstep. */
+/** Borsha rain: scenery only, never data. Streaks are <path> elements
+ * rotated ~14 degrees, each with a splash ring at its rotated impact
+ * point; rings start at opacity 0 because SMIL applies no styles before
+ * an animation begins. `still` keeps the same geometry with no SMIL and
+ * a lower opacity. The offset travel equals the dash period, so the loop
+ * is seamless; negative `begin` offsets stagger phases so the streaks do
+ * not move in lockstep. */
 export function rainMarkup(theme, L, { still = false } = {}) {
-  const COUNT = 10;
+  const COUNT = 26;
   const STREAK = 13;
   const PERIOD = 40;
+  const TILT = (14 * Math.PI) / 180;
   const left = L.pad;
   const right = L.width - L.pad;
   const innerHeight = ROWS * L.cell + (ROWS - 1) * L.gap;
   const top = L.top + 4;
   const bottom = L.top + innerHeight - 4;
+  const stagger = 1.1 / COUNT;
   const parts = [];
   for (let i = 0; i < COUNT; i++) {
     const x = left + ((i + 0.5) / COUNT) * (right - left);
@@ -151,12 +156,19 @@ export function rainMarkup(theme, L, { still = false } = {}) {
     const mid = (y + STREAK / 2).toFixed(2);
     const ys = y.toFixed(1);
     const ye = (y + STREAK).toFixed(1);
+    const cx = (x + Math.sin(TILT) * (STREAK / 2)).toFixed(2);
+    const cy = (y + STREAK / 2 + Math.cos(TILT) * (STREAK / 2)).toFixed(2);
     const opacity = still ? 0.45 : 0.6;
+    const begin = (-i * stagger).toFixed(2);
     const dash = still
       ? ''
-      : `<animate attributeName="stroke-dashoffset" values="0;${-PERIOD}" dur="1.1s" calcMode="linear" begin="${(-i * 0.11).toFixed(2)}s" repeatCount="indefinite"/>`;
+      : `<animate attributeName="stroke-dashoffset" values="0;${-PERIOD}" dur="1.1s" calcMode="linear" begin="${begin}s" repeatCount="indefinite"/>`;
+    const ring = still
+      ? ''
+      : `<animate attributeName="r" values="0.6;2.8;2.8" keyTimes="0;0.55;1" dur="1.1s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;0.55;0;0" keyTimes="0;0.5;0.58;0.75;1" dur="1.1s" begin="${begin}s" repeatCount="indefinite"/>`;
     parts.push(
-      `<path class="rain" d="M ${xs} ${ys} L ${xs} ${ye}" transform="rotate(14 ${xs} ${mid})" fill="none" stroke="${theme.rainStreak}" stroke-width="1" stroke-linecap="round" stroke-dasharray="10 30" opacity="${opacity}">${dash}</path>`,
+      `<path class="rain" d="M ${xs} ${ys} L ${xs} ${ye}" transform="rotate(14 ${xs} ${mid})" fill="none" stroke="${theme.rainStreak}" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="10 30" opacity="${opacity}">${dash}</path>`,
+      `<circle class="rain" cx="${cx}" cy="${cy}" r="0.6" opacity="0" fill="none" stroke="${theme.splashRing}" stroke-width="0.9">${ring}</circle>`,
     );
   }
   return `<g class="rain">${parts.join('')}</g>`;
