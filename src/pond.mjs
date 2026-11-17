@@ -131,43 +131,47 @@ export function currentMarkup(theme, L, { bands = 5, still = false } = {}) {
 }
 
 /** Borsha rain: scenery only, never data. Streaks are <path> elements
- * rotated ~14 degrees, each with a splash ring at its rotated impact
- * point; rings start at opacity 0 because SMIL applies no styles before
- * an animation begins. `still` keeps the same geometry with no SMIL and
- * a lower opacity. The offset travel equals the dash period, so the loop
- * is seamless; negative `begin` offsets stagger phases so the streaks do
- * not move in lockstep. */
+ * rotated by a seeded 10-20 degree tilt, each with a splash ring at its
+ * rotated impact point; rings start at opacity 0 because SMIL applies no
+ * styles before an animation begins. Every placement and timing value
+ * comes from jitter(), so runs are byte-identical. The offset travel
+ * equals the dash period, so the loop is seamless; negative `begin`
+ * offsets give full-cycle phase coverage so streaks do not move in
+ * lockstep. `still` keeps the same geometry with no SMIL and a lower
+ * opacity. */
 export function rainMarkup(theme, L, { still = false } = {}) {
   const COUNT = 26;
-  const STREAK = 13;
   const PERIOD = 40;
-  const TILT = (14 * Math.PI) / 180;
   const left = L.pad;
   const right = L.width - L.pad;
   const innerHeight = ROWS * L.cell + (ROWS - 1) * L.gap;
   const top = L.top + 4;
   const bottom = L.top + innerHeight - 4;
-  const stagger = 1.1 / COUNT;
   const parts = [];
   for (let i = 0; i < COUNT; i++) {
-    const x = left + ((i + 0.5) / COUNT) * (right - left);
-    const y = top + ((i * 37) % Math.max(1, bottom - top - STREAK));
+    const j = (salt) => jitter(`rain-${salt}-${i}`).unit;
+    const len = 9 + j('len') * 8;
+    const tilt = 10 + j('tilt') * 10;
+    const tiltRad = (tilt * Math.PI) / 180;
+    const opacity = 0.45 + j('op') * 0.25;
+    const dur = 1.0 + j('dur') * 0.3;
+    const x = left + ((i + 0.5) / COUNT) * (right - left) + (j('x') - 0.5) * 18;
+    const y = top + j('y') * (bottom - top - len);
+    const begin = -(j('phase') * dur);
     const xs = x.toFixed(2);
-    const mid = (y + STREAK / 2).toFixed(2);
+    const mid = (y + len / 2).toFixed(2);
     const ys = y.toFixed(1);
-    const ye = (y + STREAK).toFixed(1);
-    const cx = (x + Math.sin(TILT) * (STREAK / 2)).toFixed(2);
-    const cy = (y + STREAK / 2 + Math.cos(TILT) * (STREAK / 2)).toFixed(2);
-    const opacity = still ? 0.45 : 0.6;
-    const begin = (-i * stagger).toFixed(2);
+    const ye = (y + len).toFixed(1);
+    const cx = (x + Math.sin(tiltRad) * (len / 2)).toFixed(2);
+    const cy = (y + len / 2 + Math.cos(tiltRad) * (len / 2)).toFixed(2);
     const dash = still
       ? ''
-      : `<animate attributeName="stroke-dashoffset" values="0;${-PERIOD}" dur="1.1s" calcMode="linear" begin="${begin}s" repeatCount="indefinite"/>`;
+      : `<animate attributeName="stroke-dashoffset" values="0;${-PERIOD}" dur="${dur.toFixed(2)}s" calcMode="linear" begin="${begin.toFixed(2)}s" repeatCount="indefinite"/>`;
     const ring = still
       ? ''
-      : `<animate attributeName="r" values="0.6;2.8;2.8" keyTimes="0;0.55;1" dur="1.1s" begin="${begin}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;0.55;0;0" keyTimes="0;0.5;0.58;0.75;1" dur="1.1s" begin="${begin}s" repeatCount="indefinite"/>`;
+      : `<animate attributeName="r" values="0.6;2.8;2.8" keyTimes="0;0.55;1" dur="${dur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;0.55;0;0" keyTimes="0;0.5;0.58;0.75;1" dur="${dur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite"/>`;
     parts.push(
-      `<path class="rain" d="M ${xs} ${ys} L ${xs} ${ye}" transform="rotate(14 ${xs} ${mid})" fill="none" stroke="${theme.rainStreak}" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="10 30" opacity="${opacity}">${dash}</path>`,
+      `<path class="rain" d="M ${xs} ${ys} L ${xs} ${ye}" transform="rotate(${tilt.toFixed(2)} ${xs} ${mid})" fill="none" stroke="${theme.rainStreak}" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="10 30" opacity="${(still ? opacity * 0.75 : opacity).toFixed(2)}">${dash}</path>`,
       `<circle class="rain" cx="${cx}" cy="${cy}" r="0.6" opacity="0" fill="none" stroke="${theme.splashRing}" stroke-width="0.9">${ring}</circle>`,
     );
   }

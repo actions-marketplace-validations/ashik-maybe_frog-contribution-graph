@@ -138,3 +138,28 @@ test('splash rings start invisible (no pre-begin paint)', () => {
     assert.match(m[0], /opacity="0"/);
   }
 });
+
+test('rain placement and timing are deterministic', () => {
+  const a = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
+  const b = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
+  assert.equal(a, b);
+});
+
+test('rain covers pond left and right thirds', () => {
+  const L = layout();
+  const wet = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
+  const third = (L.width - 2 * L.pad) / 3;
+  const xs = [...wet.matchAll(/<path class="rain" d="M ([\d.]+) /g)].map((m) => Number(m[1]));
+  assert.equal(xs.length, 26);
+  const left = xs.filter((x) => x < L.pad + third).length;
+  const right = xs.filter((x) => x >= L.width - L.pad - third).length;
+  assert.ok(left >= 3, `left third should have >= 3 streaks, got ${left}`);
+  assert.ok(right >= 3, `right third should have >= 3 streaks, got ${right}`);
+});
+
+test('still monsoon has exactly 26 streaks and 26 still rings, zero SMIL', () => {
+  const still = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true, still: true });
+  assert.equal((still.match(/<path class="rain"/g) || []).length, 26);
+  assert.equal((still.match(/<circle class="rain"/g) || []).length, 26);
+  assert.ok(!still.includes('<animate'));
+});
