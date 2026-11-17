@@ -64,34 +64,77 @@ function quad(p0, p1, p2, t) {
   return u * u * p0 + 2 * u * t * p1 + t * t * p2;
 }
 
-/** Sample each hop as a quadratic arc: takeoff, apex, landing. */
-export function hopSamples(points, { samplesPerHop = 6, hopHeight = 9 } = {}) {
+/**
+ * Sample one move per transition with three beats baked in:
+ * sit on the pad, fly the arc, then hold a beat on landing.
+ * Dives mirror the arc downward and fade the frog toward invisible.
+ */
+export const SAMPLES_PER_BEAT = { sit: 2, arc: 8, land: 2 };
+const SIT_HOLD = 0.22;
+const LAND_HOLD = 0.08;
+
+export function hopSamples(points, marks = [], { hopHeight = 22 } = {}) {
   if (points.length === 0) return [];
-  const samples = [{ x: points[0].x, y: points[0].y, hop: 0, step: 0 }];
+const samples = [{ x: points[0].x, y: points[0].y, phase: 0, beat: 'sit', move: 0, sink: 0 }];
   for (let i = 1; i < points.length; i++) {
     const a = points[i - 1];
     const b = points[i];
-    const apex = Math.min(a.y, b.y) - hopHeight;
-    for (let s = 1; s <= samplesPerHop; s++) {
-      const u = s / samplesPerHop;
+    const dives = marks[i]?.dive ?? false;
+    const apex = dives ? Math.min(a.y, b.y) + 6 : Math.min(a.y, b.y) - hopHeight;
+    for (let s = 1; s <= SAMPLES_PER_BEAT.sit; s++) {
+      samples.push({ x: a.x, y: a.y, phase: s / SAMPLES_PER_BEAT.sit, beat: 'sit', move: i - 1, sink: 0 });
+    }
+    for (let s = 1; s <= SAMPLES_PER_BEAT.arc; s++) {
+      const u = s / SAMPLES_PER_BEAT.arc;
       samples.push({
         x: quad(a.x, (a.x + b.x) / 2, b.x, u),
         y: quad(a.y, apex, b.y, u),
-        hop: i - 1,
-        step: s,
+        phase: u,
+        beat: 'arc',
+        move: i - 1,
+        sink: dives ? Math.sin(u * Math.PI) : 0,
       });
+    }
+    for (let s = 1; s <= SAMPLES_PER_BEAT.land; s++) {
+      samples.push({ x: b.x, y: b.y, phase: s / SAMPLES_PER_BEAT.land, beat: 'land', move: i - 1, sink: 0 });
     }
   }
   return samples;
 }
 
-/** Even time per hop, so ripple offsets land exactly on the frog's feet. */
-export function motionTiming(samples, hops, samplesPerHop) {
-  const values = samples
-    .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
-    .join(';');
-  const keyTimes = samples
-    .map((p) => Math.min(1, (p.hop + p.step / samplesPerHop) / hops).toFixed(4))
-    .join(';');
-  return { values, keyTimes };
+export function beatWeights() {
+  const { sit, arc, land } = SAMPLES_PER_BEAT;
+  const sitSeconds = SIT_HOLD;
+  const arcSeconds = 0.3;
+  const landSeconds = LAND_HOLD;
+  return { sit: sitSeconds, arc: arcSeconds, land: landSeconds, total: sitSeconds + arcSeconds + landSeconds };
+}
+
+/** Time each sample by its beat, so the frog truly holds still while sitting.
+ * Every move occupies an identical span, so a move's keyTimes progress from
+ * move/moves to (move + 1)/moves and the final sample lands exactly on 1. */
+export function motionTiming(samples, moves) {
+  const weights = beatWeights();
+  const values = [];
+  const keyTimes = [];
+
+  for (const p of samples) {
+    const beatOffset =
+      p.beat === 'sit' ? 0
+      : p.beat === 'arc' ? weights.sit
+      : weights.sit + weights.arc;
+    const beatSpan =
+      p.beat === 'sit' ? weights.sit
+      : p.beat === 'arc' ? weights.arc
+      : weights.land;
+    const beatSamples =
+      p.beat === 'sit' ? SAMPLES_PER_BEAT.sit
+      : p.beat === 'arc' ? SAMPLES_PER_BEAT.arc
+      : SAMPLES_PER_BEAT.land;
+    const withinMove = (beatOffset + p.phase * beatSpan) / weights.total;
+    const t = Math.min(1, (p.move + withinMove) / moves);
+    values.push(`${p.x.toFixed(1)},${p.y.toFixed(1)}`);
+    keyTimes.push(t.toFixed(4));
+  }
+  return { values: values.join(';'), keyTimes: keyTimes.join(';') };
 }
