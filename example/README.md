@@ -30,8 +30,8 @@ motion for browsers.
       <b>Tied</b><br><sub>Many identical small days — flat pads, no invented contrast</sub>
     </td>
     <td align="center">
-      <a href="animated/night.svg"><img src="preview/night.svg" width="230" alt="Monsoon night — the same pond, dark palette"></a><br>
-      <b>Night</b><br><sub>Monsoon night — the same pond, dark palette</sub>
+      <a href="animated/night.svg"><img src="preview/night.svg" width="230" alt="Monsoon night — the same pond, deep blue"></a><br>
+      <b>Night</b><br><sub>Monsoon night — the same pond, deep blue</sub>
     </td>
   </tr>
   <tr>
