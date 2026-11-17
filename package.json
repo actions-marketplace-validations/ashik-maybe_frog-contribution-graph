@@ -1,6 +1,6 @@
 {
   "name": "frog-contribution-graph",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Your GitHub contribution graph as an animated Bangladeshi pond - a frog hops your commits.",
   "type": "module",
   "license": "MIT",

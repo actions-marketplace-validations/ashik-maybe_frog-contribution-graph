@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.0.1 - 2026-11-17
+
+Repository completeness pass; no rendering changes.
+
+### Added
+- EULA.md: the MIT License is the end-user license, with a no-data-collection
+  summary (Marketplace Developer Agreement 2.4).
+- SECURITY.md and a Support section in the README (Marketplace 5.3).
+- CONTRIBUTING.md with the house rules: determinism, pads carry the data,
+  transliteration only, zero dependencies, SMIL only, reduced-motion fallback.
+- CI guards: every action input must be documented in the README; no Bangla
+  script may land in tracked files.
+- Dependabot, weekly, for GitHub Actions.
+- npm metadata: repository, bugs, homepage, keywords.
+
+### Changed
+- README: status and license badges, Privacy and Changelog sections, License
+  section points at EULA.md.
+- LICENSE copyright line uses the maintainer handle.
+
 ## 1.0.0 - 2026-11-17
 
 Initial public release.
