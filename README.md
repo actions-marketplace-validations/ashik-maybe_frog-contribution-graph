@@ -10,6 +10,9 @@ with `prefers-reduced-motion`.
 Inspired by Bangladesh's shapla — the water lily — and the ponds it blooms in.
 The pond is a familiar image everywhere, so any profile can wear it.
 
+[![Test](https://github.com/ashik-maybe/frog-contribution-graph/actions/workflows/test.yml/badge.svg)](https://github.com/ashik-maybe/frog-contribution-graph/actions/workflows/test.yml)
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 <picture>
   <source media="(prefers-color-scheme: dark)"
           srcset="https://raw.githubusercontent.com/ashik-maybe/frog-contribution-graph/output/pond-night.svg">
@@ -141,6 +144,24 @@ pad colours never change, so the graph never lies. Automatic like GitHub's
 Halloween grid; set `seasonal_effects: false` to opt out. The committed
 monsoon previews (day and night) are forced-on so they look the same all year.
 
+## Support
+
+Open an issue at
+[github.com/ashik-maybe/frog-contribution-graph/issues](https://github.com/ashik-maybe/frog-contribution-graph/issues).
+Include your workflow snippet, the action version you used (`@v1` or a tag),
+and what you expected instead. Maintained best-effort; please be patient.
+
+## Privacy
+
+No servers, no telemetry, no data collection. The action runs entirely inside
+your GitHub Actions runner with your token and makes one network call: the
+GitHub GraphQL API, to read the contribution calendar for the username you
+pass as an input. Nothing else leaves your runner. See [EULA.md](EULA.md).
+
+## Changelog
+
+[CHANGELOG.md](CHANGELOG.md).
+
 ## Development
 
 ### How it works
@@ -184,6 +205,10 @@ npm run generate -- --user YOU --token $GITHUB_TOKEN
 Requires Node 20+. The committed example SVGs are checked against the
 generator in CI, so a render change must travel with regenerated previews.
 
+Contributions: see [CONTRIBUTING.md](CONTRIBUTING.md). Security: see
+[SECURITY.md](SECURITY.md).
+
 ## License
 
-MIT
+MIT — that license governs your use of this action; see
+[LICENSE](LICENSE) and the end-user terms in [EULA.md](EULA.md).
