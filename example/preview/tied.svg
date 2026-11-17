@@ -2,7 +2,7 @@
 <title id="pond-title">Contribution pond at day</title>
 <desc id="pond-desc">A frog hops across 208 active days. 241 contributions in the last year.</desc>
 
-<rect width="755" height="141" rx="10" fill="#d9eaf5" stroke="#bcd8e8"/>
+<rect x="0.5" y="0.5" width="754.0" height="140.0" fill="#d9eaf5" stroke="#bcd8e8"/>
 <filter id="frog-shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0.8" stdDeviation="0.9" flood-opacity="0.4"/></filter>
 
 <text x="8" y="15" font-family="monospace" font-size="9" fill="#41586a">Jan</text><text x="64" y="15" font-family="monospace" font-size="9" fill="#41586a">Feb</text><text x="120" y="15" font-family="monospace" font-size="9" fill="#41586a">Mar</text><text x="190" y="15" font-family="monospace" font-size="9" fill="#41586a">Apr</text><text x="246" y="15" font-family="monospace" font-size="9" fill="#41586a">May</text><text x="302" y="15" font-family="monospace" font-size="9" fill="#41586a">Jun</text><text x="372" y="15" font-family="monospace" font-size="9" fill="#41586a">Jul</text><text x="428" y="15" font-family="monospace" font-size="9" fill="#41586a">Aug</text><text x="498" y="15" font-family="monospace" font-size="9" fill="#41586a">Sep</text><text x="554" y="15" font-family="monospace" font-size="9" fill="#41586a">Oct</text><text x="610" y="15" font-family="monospace" font-size="9" fill="#41586a">Nov</text><text x="680" y="15" font-family="monospace" font-size="9" fill="#41586a">Dec</text>
