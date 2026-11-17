@@ -15,6 +15,7 @@ export const THEMES = {
     ripple: '#3c7a38',
     shaplaPetal: '#fdf7f8',
     shaplaHeart: '#e6a4b4',
+    rainStreak: '#9cc8ae',
   },
   night: {
     name: 'night',
@@ -28,6 +29,7 @@ export const THEMES = {
     ripple: '#8fe0b0',
     shaplaPetal: '#f1edf6',
     shaplaHeart: '#d68ba1',
+    rainStreak: '#2f6b57',
   },
 };
 

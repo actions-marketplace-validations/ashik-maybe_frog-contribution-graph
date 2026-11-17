@@ -129,6 +129,39 @@ export function currentMarkup(theme, L, { bands = 5, still = false } = {}) {
   return parts.join('');
 }
 
+/** Faint borsha rain: scenery only, never data. Streaks are <path> elements
+ * rotated ~14 degrees, so pad (ellipse) counts are untouched. `still` keeps
+ * the same geometry with no SMIL and a lower opacity. The offset travel
+ * equals the dash period, so the loop is seamless; negative `begin` offsets
+ * stagger phases so the streaks do not move in lockstep. */
+export function rainMarkup(theme, L, { still = false } = {}) {
+  const COUNT = 10;
+  const STREAK = 8;
+  const PERIOD = 40;
+  const left = L.pad;
+  const right = L.width - L.pad;
+  const innerHeight = ROWS * L.cell + (ROWS - 1) * L.gap;
+  const top = L.top + 4;
+  const bottom = L.top + innerHeight - 4;
+  const parts = [];
+  for (let i = 0; i < COUNT; i++) {
+    const x = left + ((i + 0.5) / COUNT) * (right - left);
+    const y = top + ((i * 37) % Math.max(1, bottom - top - STREAK));
+    const xs = x.toFixed(2);
+    const mid = (y + STREAK / 2).toFixed(2);
+    const ys = y.toFixed(1);
+    const ye = (y + STREAK).toFixed(1);
+    const opacity = still ? 0.2 : 0.35;
+    const dash = still
+      ? ''
+      : `<animate attributeName="stroke-dashoffset" values="0;${-PERIOD}" dur="1.1s" calcMode="linear" begin="${(-i * 0.11).toFixed(2)}s" repeatCount="indefinite"/>`;
+    parts.push(
+      `<path class="rain" d="M ${xs} ${ys} L ${xs} ${ye}" transform="rotate(14 ${xs} ${mid})" fill="none" stroke="${theme.rainStreak}" stroke-width="1" stroke-linecap="round" stroke-dasharray="10 30" opacity="${opacity}">${dash}</path>`,
+    );
+  }
+  return `<g class="rain">${parts.join('')}</g>`;
+}
+
 /** One fading ring per landing. Starts invisible: SMIL applies no styles
  * before an animation begins, and a visible static state would paint every
  * ring at once until the first loop completes. */

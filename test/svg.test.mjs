@@ -69,3 +69,23 @@ test('svg stays under 250 KB', () => {
   const svg = renderSvg({ grid, route, theme: getTheme('day') });
   assert.ok(Buffer.byteLength(svg) < 250_000);
 });
+
+test('monsoon render adds rain and changes nothing else', () => {
+  const dry = renderSvg({ grid, route, theme: getTheme('day') });
+  const wet = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
+  assert.match(wet, /class="rain"/);
+  assert.equal((wet.match(/<ellipse/g) || []).length, (dry.match(/<ellipse/g) || []).length);
+  assert.ok(!dry.includes('class="rain"'));
+});
+
+test('monsoon still render has no SMIL', () => {
+  const svg = renderSvg({ grid, route, theme: getTheme('day'), still: true, monsoon: true });
+  assert.ok(!svg.includes('<animate'));
+});
+
+test('rain streaks are paths not pads', () => {
+  const dry = renderSvg({ grid, route, theme: getTheme('day') });
+  const wet = renderSvg({ grid, route, theme: getTheme('day'), monsoon: true });
+  assert.match(wet, /<path class="rain"/);
+  assert.equal((wet.match(/<ellipse/g) || []).length, (dry.match(/<ellipse/g) || []).length);
+});

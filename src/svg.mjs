@@ -8,13 +8,14 @@ import {
   rippleMarkup,
   flowerMarkup,
   currentMarkup,
+  rainMarkup,
 } from './pond.mjs';
 import { frogMarkup, hopSamples, motionTiming } from './frog.mjs';
 import { markGaps } from './route.mjs';
 
 const HOP_HEIGHT = 22;
 
-export function renderSvg({ grid, theme, route, locale = 'en', still = false }) {
+export function renderSvg({ grid, theme, route, locale = 'en', still = false, monsoon = false }) {
   const L = layout();
   const stats = gridStats(grid);
   const active = activeStats(grid);
@@ -52,13 +53,13 @@ export function renderSvg({ grid, theme, route, locale = 'en', still = false }) 
 <title id="pond-title">Contribution pond at ${theme.name}</title>
 <desc id="pond-desc">${desc}</desc>
 ${still ? '' : `<style>
-@media (prefers-reduced-motion: reduce) { .motion, .currents { display: none } }
+@media (prefers-reduced-motion: reduce) { ${monsoon ? '.motion, .currents, .rain' : '.motion, .currents'} { display: none } }
 @media (prefers-reduced-motion: no-preference) { .still-frog { display: none } }
 </style>`}
 ${waterMarkup(theme, L)}
 ${shadow}
 ${currentMarkup(theme, L, { still })}
-${monthMarkup(grid, theme, L, { locale })}
+${monsoon ? `${rainMarkup(theme, L, { still })}\n` : ''}${monthMarkup(grid, theme, L, { locale })}
 ${padMarkup(grid, theme, L, { shape })}
 ${flowerMarkup(grid, theme, L, { loopDuration, active: active.active, still })}
 ${still || route.length <= 1 ? '' : rippleMarkup(marked, theme, L, { hopDuration: 0.6, loopDuration })}
