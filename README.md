@@ -71,11 +71,11 @@ SVGs are checked in so they never go stale silently.
 ## Borsha, automatically
 
 During the classical Bengali rain months (Ashadh and Shravan, roughly
-June 15 to August 16, Bangladesh time) the pond gets about ten faint rain
-streaks. It is scenery only: pad colours never change, so the graph never
-lies. Automatic like GitHub's Halloween grid; set `seasonal_effects: false`
-to opt out. The committed monsoon preview is forced-on so it looks the same
-all year.
+June 15 to August 16, Bangladesh time) the pond gets about two dozen faint
+rain streaks with a small splash ring where each lands. It is scenery only:
+pad colours never change, so the graph never lies. Automatic like GitHub's
+Halloween grid; set `seasonal_effects: false` to opt out. The committed
+monsoon preview is forced-on so it looks the same all year.
 
 ## Use it
 
@@ -143,8 +143,9 @@ Then embed it in your README:
 
 ## Design
 
-- **Morning pond / monsoon night.** Two palettes, one pond. Light is pale water
-  and open flowers; dark is deep teal and moonlight ripples.
+- **Morning pond / monsoon night.** Two palettes, one pond. Water is blue in
+  both: pale sky-blue morning (#d9eaf5), deep river-blue night (#0a1a2e). Pads
+  stay green because they carry the data; the shapla blooms stay white-pink.
 - **Reduced motion.** The SMIL animation is wrapped in media queries; a static
   pond renders for `prefers-reduced-motion: reduce`.
 - **Zero dependencies.** Plain ESM plus `fetch`, so the action starts in
