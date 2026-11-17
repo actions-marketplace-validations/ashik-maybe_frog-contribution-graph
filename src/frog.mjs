@@ -1,6 +1,8 @@
 /**
  * Tiny pixel frog, seven pixels wide and six tall.
  * 1 = body, 2 = eye, 3 = belly.
+ * A dark silhouette is drawn one expansion behind every part, so the frog
+ * separates from pads and water at any depth.
  */
 const FROG = [
   '..2.2..',
@@ -14,24 +16,47 @@ const FROG = [
 const WIDTH = 7;
 const HEIGHT = 6;
 const ROLE = { 1: 'frog', 2: 'frogEye', 3: 'frogBelly' };
+const OUTLINE = '#101f16';
+const PUPIL = '#101f16';
+const EXPANSION = 0.7;
+
+function cells(row) {
+  return row.split('').map((kind, index) => [index, kind]);
+}
 
 /** Rects centred on 0,0 so scale transforms squash about the frog's middle. */
 export function frogMarkup(theme, pixel) {
   const w = WIDTH * pixel;
   const h = HEIGHT * pixel;
-  const rects = [];
+  const cx = (x) => x * pixel - w / 2;
+  const cy = (y) => y * pixel - h / 2;
+  const parts = [];
+
   for (let y = 0; y < FROG.length; y++) {
-    for (let x = 0; x < FROG[y].length; x++) {
-      const kind = FROG[y][x];
+    for (const [x, kind] of cells(FROG[y])) {
       if (kind === '.') continue;
-      const px = (x * pixel - w / 2).toFixed(2);
-      const py = (y * pixel - h / 2).toFixed(2);
-      rects.push(
-        `<rect x="${px}" y="${py}" width="${pixel}" height="${pixel}" fill="${theme[ROLE[kind]]}"/>`,
-      );
+      const px = (cx(x) - EXPANSION).toFixed(2);
+      const py = (cy(y) - EXPANSION).toFixed(2);
+      const size = (pixel + 2 * EXPANSION).toFixed(2);
+      parts.push(`<rect x="${px}" y="${py}" width="${size}" height="${size}" fill="${OUTLINE}"/>`);
     }
   }
-  return rects.join('');
+  for (let y = 0; y < FROG.length; y++) {
+    for (const [x, kind] of cells(FROG[y])) {
+      if (kind === '.') continue;
+      const px = cx(x).toFixed(2);
+      const py = cy(y).toFixed(2);
+      parts.push(`<rect x="${px}" y="${py}" width="${pixel}" height="${pixel}" fill="${theme[ROLE[kind]]}"/>`);
+      if (kind === '2') {
+        const pupil = pixel * 0.55;
+        const offset = (pixel - pupil) / 2;
+        parts.push(
+          `<rect x="${(cx(x) + offset).toFixed(2)}" y="${(cy(y) + offset).toFixed(2)}" width="${pupil.toFixed(2)}" height="${pupil.toFixed(2)}" fill="${PUPIL}"/>`,
+        );
+      }
+    }
+  }
+  return parts.join('');
 }
 
 function quad(p0, p1, p2, t) {
