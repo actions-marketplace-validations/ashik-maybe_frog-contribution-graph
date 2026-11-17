@@ -17,9 +17,7 @@ export function buildRoute(grid, { maxHops = 48 } = {}) {
   }
 
   if (picks.length === 0) {
-    return Array.from({ length: Math.min(12, grid.length) }, (_, x) => ({
-      x, y: 3, date: null, count: 0, level: 0,
-    }));
+    return [{ x: Math.floor(grid.length / 2), y: 3, date: null, count: 0, level: 0 }];
   }
 
   if (picks.length <= maxHops) return picks;
