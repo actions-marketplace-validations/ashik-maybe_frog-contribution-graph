@@ -15,8 +15,8 @@ export function renderSvg({ grid, theme, route }) {
   const L = layout();
   const stats = gridStats(grid);
   const pixel = L.cell / 3.5;
-  const hops = route.length;
-  const loopDuration = Math.max(1, hops * HOP_DURATION);
+  const transitions = Math.max(1, route.length - 1);
+  const loopDuration = transitions * HOP_DURATION;
 
   const points = route.map((p) => ({
     x: L.x(p.x) + L.cell / 2,
@@ -28,7 +28,7 @@ export function renderSvg({ grid, theme, route }) {
   });
   const { values, keyTimes } = motionTiming(
     samples,
-    Math.max(1, hops),
+    transitions,
     SAMPLES_PER_HOP,
   );
 
@@ -36,7 +36,7 @@ export function renderSvg({ grid, theme, route }) {
   const shadow = `<filter id="frog-shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0.8" stdDeviation="0.9" flood-opacity="0.4"/></filter>`;
   const stillFrog = `<g class="still-frog" filter="url(#frog-shadow)" transform="translate(${first.x.toFixed(1)} ${first.y.toFixed(1)})">${frogMarkup(theme, pixel)}</g>`;
   const movingFrog =
-    hops > 1
+    transitions > 1
       ? `<g class="motion" filter="url(#frog-shadow)"><animateTransform attributeName="transform" type="translate" values="${values}" keyTimes="${keyTimes}" dur="${loopDuration.toFixed(2)}s" repeatCount="indefinite"/><g><animateTransform attributeName="transform" type="scale" values="1 1;1.14 0.86;1 1" keyTimes="0;0.85;1" dur="${HOP_DURATION}s" repeatCount="indefinite"/>${frogMarkup(theme, pixel)}</g></g>`
       : '';
 
